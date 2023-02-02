@@ -18,13 +18,22 @@ public class Main {
                     Education.values()[new Random().nextInt(Education.values().length)])
             );
         }
-        long notExactlySummer = persons.stream().filter(person->person.getAge()<18).count();// несовершеннолетние
+        long notExactlySummer = persons.stream()
+                .filter(person->person.getAge()<18).count();// несовершеннолетние
         System.out.println("Количество несовершенно летний составила по статисте - " + notExactlySummer);
-        List<String> prizeWinners= persons.stream().filter(person -> person.getAge()>=18 && person.getAge()<=27&&
-                person.getSex()==Sex.MAN).map(Person::getFamily).collect(Collectors.toList());// фамили призывников (парней)
+        List<String> prizeWinners = persons.stream()
+                .filter(person -> person.getAge()>=18 && person.getAge()<=27 && person.getSex()==Sex.MAN)
+                .map(Person::getFamily)
+                .collect(Collectors.toList());// фамили призывников (парней)
         System.out.println(prizeWinners);
-        List<String> withHigherEducation = persons.stream().filter(person -> person.getEducation()==Education.HIGHER&&person.getAge()>=18&&person.getAge()<65)
-                .sorted(Comparator.comparing(person -> person.getFamily())).map(Person::getFamily).collect(Collectors.toList());// Может работать + вышка
+        List<String> withHigherEducation = persons.stream()
+                .filter(person -> person.getEducation() == Education.HIGHER)
+                .filter(person -> person.getAge() >= 18 && person.getAge() < 65)
+                .sorted(Comparator.comparing(Person::getSex)
+                        .thenComparing(Comparator.nullsFirst(Comparator.comparing(Person::getAge)))
+                        .thenComparing(Person::getFamily))
+                .map(Person::getFamily)
+                .collect(Collectors.toList());// Может работать + вышка
         System.out.println(withHigherEducation);
     }
 
